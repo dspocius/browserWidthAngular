@@ -9,9 +9,16 @@ export class OnlyForScreenComponent {
   private viewportWidth;
   private config = new ConfigComponent();
   private added = false;
+  private eventListenerFunction;
 
   constructor(private templateRef: TemplateRef<any>, private viewContainer: ViewContainerRef) {
 	this.config.setValues(400,600);
+  }
+
+  onResizing(device) {
+	  return function(e) {
+		this.onResize(device);
+	  }.bind(this);
   }
 
   onResize(device) {
@@ -35,11 +42,16 @@ export class OnlyForScreenComponent {
   }
 
   @Input() set onlyForScreen(device){
-	window.addEventListener('resize', function(){
-		this.onResize(device);
-	}.bind(this));
+	console.log("add event listener");
+	this.eventListenerFunction = this.onResizing(device);
+	window.addEventListener('resize', this.eventListenerFunction);
 	
 	this.onResize(device);
+  }
+  
+  ngOnDestroy() {
+	  console.log("remove event listener");
+	window.removeEventListener("resize", this.eventListenerFunction);
   }
 
 }
