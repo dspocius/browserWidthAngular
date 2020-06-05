@@ -11,12 +11,12 @@ export class OnlyForScreenComponent {
   private added = false;
 
   constructor(private templateRef: TemplateRef<any>, private viewContainer: ViewContainerRef) {
-	const vw = Math.min(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-	this.viewportWidth = vw;
 	this.config.setValues(400,600);
   }
 
   onResize(device) {
+	this.viewportWidth = Math.min(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+
 	const allow = (device === "mobile" && this.viewportWidth < this.config.getMobile()) || 
 	(device === "tablet" && this.viewportWidth >= this.config.getMobile() && this.viewportWidth < this.config.getTablet()) || 
 	(device === "desktop" && this.viewportWidth >= this.config.getTablet());
